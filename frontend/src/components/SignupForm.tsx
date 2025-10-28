@@ -15,7 +15,7 @@ export default function SignupForm() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) navigate('/editor');
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async (values: { name: string; email: string; password: string }) => {
     try {

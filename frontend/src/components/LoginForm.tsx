@@ -19,7 +19,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) navigate('/editor');
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async () => {
     try {
