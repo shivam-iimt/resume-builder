@@ -1,23 +1,18 @@
 import { Router } from "express";
-import { signup, login, logout } from "../controllers/auth.controller";
-import { validate } from "../middlewares/validate.middleware";
-import { z } from "zod";
-import { authRateLimiter } from "../middlewares/rateLimit.middleware";
+import {
+  signup,
+  login,
+  logout,
+  refresh,
+  me,
+} from "../controllers/auth.controller";
 
 const router = Router();
 
-const signupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  name: z.string().min(2),
-});
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-router.post("/signup", authRateLimiter, validate(signupSchema), signup);
-router.post("/login", authRateLimiter, validate(loginSchema), login);
+router.post("/signup", signup);
+router.post("/login", login);
 router.post("/logout", logout);
+router.post("/refresh", refresh);
+router.get("/me", me);
 
 export default router;

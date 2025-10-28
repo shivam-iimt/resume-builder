@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { Resume } from "../models/resume";
-import { sanitizeInput } from "../utils/sanitize";
-import { Types } from "mongoose";
+import { sanitize  } from "../utils/sanitize";
 import { nanoid } from "nanoid";
 
 export const saveResume = async (req: any, res: Response) => {
-  const data = sanitizeInput(req.body);
+  const data = sanitize (req.body);
   let resume = await Resume.findOne({ userId: req.userId });
   if (resume) {
     resume.data = data;

@@ -1,12 +1,10 @@
-import xss from "xss";
-
-export const sanitizeInput: (input: any) => any = (input: any) => {
-  if (typeof input === "string") return xss(input);
-  if (Array.isArray(input)) return input.map(sanitizeInput);
-  if (typeof input === "object" && input !== null) {
-    return Object.fromEntries(
-      Object.entries(input).map(([k, v]) => [k, sanitizeInput(v)])
-    );
+export function sanitize(obj: any) {
+  if (!obj || typeof obj !== "object") return obj;
+  const result: any = {};
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (typeof v === "string") result[k] = v.trim();
+    else result[k] = v;
   }
-  return input;
-};
+  return result;
+}

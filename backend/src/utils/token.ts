@@ -1,24 +1,35 @@
 import jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
-
-if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
-  throw new Error("JWT secret keys are missing from environment variables.");
+function getSecrets() {
+  const access = process.env.ACCESS_TOKEN_SECRET;
+  const refresh = process.env.REFRESH_TOKEN_SECRET;
+  if (!access || !refresh) {
+    throw new Error(
+      "Missing JWT secrets. Ensure ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET are set."
+    );
+  }
+  return { access, refresh };
 }
 
-export const signAccessToken = (userId: string) => {
-  return jwt.sign({ userId }, ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
+export const signAccessToken = (userId: string, opts?: jwt.SignOptions) => {
+  const { access } = getSecrets();
+  const signOpts: jwt.SignOptions = { expiresIn: "15m", ...(opts || {}) };
+  return jwt.sign({ userId }, access, signOpts);
 };
 
-export const signRefreshToken = (userId: string) => {
-  return jwt.sign({ userId }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+export const signRefreshToken = (userId: string, opts?: jwt.SignOptions) => {
+  const { refresh } = getSecrets();
+  const signOpts: jwt.SignOptions = { expiresIn: "7d", ...(opts || {}) };
+  return jwt.sign({ userId }, refresh, signOpts);
 };
 
 export const verifyAccessToken = (token: string) => {
-  return jwt.verify(token, ACCESS_TOKEN_SECRET);
+  const { access } = getSecrets();
+  return jwt.verify(token, access) as JwtPayload;
 };
 
 export const verifyRefreshToken = (token: string) => {
-  return jwt.verify(token, REFRESH_TOKEN_SECRET);
+  const { refresh } = getSecrets();
+  return jwt.verify(token, refresh) as JwtPayload;
 };

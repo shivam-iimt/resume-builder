@@ -1,24 +1,34 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, Model, Document } from "mongoose";
 
-interface IUser {
+export interface IUser extends Document {
+  name: string;
   email: string;
   password: string;
-  name: string;
   refreshTokens: string[];
   failedLoginAttempts: number;
-  lockUntil?: Date;
+  lockUntil?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true, unique: true, lowercase: true },
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     password: { type: String, required: true },
-    name: { type: String, required: true },
-    refreshTokens: [{ type: String }],
+    refreshTokens: { type: [String], default: [] },
     failedLoginAttempts: { type: Number, default: 0 },
     lockUntil: { type: Date, default: null },
   },
   { timestamps: true }
 );
 
-export const User = model<IUser>("User", userSchema);
+userSchema.index({ email: 1 });
+export const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
