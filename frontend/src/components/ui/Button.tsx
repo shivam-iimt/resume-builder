@@ -1,43 +1,42 @@
 import React from 'react';
-import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
-type Props = {
-  children?: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  className?: string;
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: 'solid' | 'ghost';
+  size?: 'sm' | 'md';
   icon?: React.ReactNode;
-  variant?: 'primary' | 'ghost' | 'neutral';
-  ariaLabel?: string;
-  type?: 'button' | 'submit' | 'reset';
-};
+}
 
-export default function Button({
+export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
-  className,
+  variant = 'solid',
+  size = 'md',
   icon,
-  variant = 'primary',
-  ariaLabel,
-  type = 'button',
-}: Props) {
+}) => {
   const base =
-    'btn inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium focus-ring';
+    'inline-flex items-center gap-1 font-medium rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
   const variants: Record<string, string> = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm',
-    ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900',
-    neutral:
-      'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700',
+    solid:
+      'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600',
+    ghost:
+      'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200',
+  };
+  const sizes: Record<string, string> = {
+    sm: 'px-3 py-1 text-sm',
+    md: 'px-4 py-2 text-base',
   };
 
   return (
-    <button
-      type={type}
-      aria-label={ariaLabel}
+    <motion.button
+      whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className={clsx(base, variants[variant], className)}
+      className={`${base} ${variants[variant]} ${sizes[size]}`}
     >
-      {icon && <span className="flex items-center">{icon}</span>}
+      {icon && <span>{icon}</span>}
       {children}
-    </button>
+    </motion.button>
   );
-}
+};

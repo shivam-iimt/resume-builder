@@ -1,20 +1,16 @@
-import { useState, ReactNode } from 'react';
-import { ResumeData } from '../shared/types';
+import React, { useState } from 'react';
+import { ResumeData } from '../types/resume';
 import { ResumeContext } from '../hooks/useResume';
 
-const defaultResume: ResumeData = {
-  personal: { name: '', email: '', phone: '', headline: '' },
+const initialResume: ResumeData = {
+  personal: { name: '', headline: '', email: '', phone: '' },
   experience: [],
   projects: [],
   skills: [],
 };
 
-export const ResumeProvider = ({ children }: { children: ReactNode }) => {
-  const [resumeData, setResumeData] = useState<ResumeData>(defaultResume);
+export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [resumeData, setResumeData] = useState<ResumeData>(initialResume);
 
-  return (
-    <ResumeContext.Provider value={{ resumeData, setResumeData }}>
-      {children}
-    </ResumeContext.Provider>
-  );
+  return <ResumeContext.Provider value={{ resumeData, setResumeData }}>{children}</ResumeContext.Provider>;
 };

@@ -1,34 +1,40 @@
-import Button from '../ui/Button';
-import { toast } from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { Save, Download } from 'lucide-react';
+import React from 'react';
+import { Button } from '../ui/Button';
+import { Sun, Moon, Eye, Save, FileText } from 'lucide-react';
+import { useTheme } from '../../hooks/useTheme';
+// import { useTheme } from '../../contexts/ThemeContext';
 
-export const EditorToolbar = () => {
-  const handleSave = () => {
-    toast.success('Resume saved successfully!');
-  };
-
-  const handleExport = () => {
-    toast('Export started...', { icon: '📄' });
-  };
+export default function EditorToolbar() {
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <motion.div
-      className="sticky top-0 z-50 w-full border-b bg-card backdrop-blur flex items-center justify-between px-4 py-3 shadow-sm"
-      initial={{ y: -10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <h1 className="font-semibold text-lg tracking-tight text-primary">Resume Editor</h1>
-
-      <div className="flex items-center gap-3">
-        <Button onClick={handleSave} icon={<Save size={16} />}>
-          Save
+    <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-[var(--color-bg-secondary)] sticky top-0 z-10">
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" icon={<FileText size={16} />}>
+          Templates
         </Button>
-        <Button onClick={handleExport} icon={<Download size={16} />}>
-          Export
+        <Button variant="ghost" size="sm" icon={<Eye size={16} />}>
+          Preview
         </Button>
       </div>
-    </motion.div>
+
+      <div className="flex items-center gap-2">
+        <Button
+          variant="solid"
+          size="sm"
+          icon={<Save size={16} />}
+          onClick={() => console.log('Manual save clicked')}
+        >
+          Save
+        </Button>
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+      </div>
+    </div>
   );
-};
+}

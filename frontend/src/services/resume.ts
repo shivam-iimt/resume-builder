@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ResumeData } from "../shared/types";
+import { ResumeData } from "../types/resume";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

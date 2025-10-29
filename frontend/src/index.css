@@ -1,27 +1,23 @@
+/* MUST be the very first line (before tailwind directives or any CSS) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
 @import "tailwindcss/theme";
 
-@layer base {
-    :root {
-        --background: 255 255 255;
-        --foreground: 17 24 39;
-        --card: 255 255 255;
-        --card-foreground: 17 24 39;
-        --border: 229 231 235;
-        --muted: 243 244 246;
-    }
+/* basic tokens */
+:root {
+    --bg: #f8fafc;
+    --fg: #0f172a;
+}
 
-    .dark {
-        --background: 17 24 39;
-        --foreground: 255 255 255;
-        --card: 31 41 55;
-        --card-foreground: 255 255 255;
-        --border: 55 65 81;
-        --muted: 55 65 81;
-    }
+.dark {
+    --bg: #0b1220;
+    --fg: #e6eef8;
+}
 
-    body {
-        @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] transition-colors duration-300;
-    }
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { EditorToolbar } from './EditorToolbar';
+import EditorToolbar  from './EditorToolbar';
 import Editor from '../Editor';
 import Preview from '../Preview';
 import PDFExport from '../PDFExport';
