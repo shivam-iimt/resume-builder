@@ -1,32 +1,14 @@
-// backend/src/index.ts
 import dotenv from "dotenv";
 dotenv.config();
-import mongoose from "mongoose";
+import { env } from "./config/env";
+import { connectDB, disconnectDB } from "./config/db";
 import app from "./app";
 import logger from "./utils/logger";
 
-const PORT = Number(process.env.PORT || 8000);
-
-// Validate required environment variables early
-const requiredEnv = [
-  "MONGO_URI",
-  "ACCESS_TOKEN_SECRET",
-  "REFRESH_TOKEN_SECRET",
-  "FRONTEND_ORIGIN",
-];
-const missing = requiredEnv.filter((k) => !process.env[k]);
-if (missing.length) {
-  logger.error(`Missing required environment variables: ${missing.join(", ")}`);
-  process.exit(1);
-}
-
-async function start() {
+const PORT = Number(env.PORT) || 8000;
+async function startServer() {
   try {
-    await mongoose.connect(process.env.MONGO_URI!, {
-      // useUnifiedTopology and useNewUrlParser are defaults in modern mongoose
-      autoIndex: true,
-    });
-    logger.info("MongoDB connected");
+    await connectDB();
     const server = app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
     });
@@ -34,8 +16,8 @@ async function start() {
       logger.info(`Received ${signal}. Closing server...`);
       server.close(async () => {
         try {
-          await mongoose.disconnect();
-          logger.info("MongoDB disconnected. Exiting.");
+          await disconnectDB();
+          logger.info("✅ MongoDB disconnected. Exiting.");
           process.exit(0);
         } catch (err) {
           logger.error("Error during graceful shutdown", err);
@@ -58,4 +40,4 @@ async function start() {
     process.exit(1);
   }
 }
-start();
+startServer();

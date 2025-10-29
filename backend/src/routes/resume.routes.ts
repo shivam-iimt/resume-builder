@@ -1,18 +1,12 @@
-import { Router } from "express";
-import {
-  saveResume,
-  getResume,
-  getPublicResume,
-} from "../controllers/resume.controller";
+import express from "express";
+import * as ResumeController from "../controllers/resume.controller";
 import { authenticate } from "../middlewares/auth.middleware";
-import { exportResumePDF } from "../controllers/pdfController";
 
-const router = Router();
+const router = express.Router();
 
-router.get("/", authenticate, getResume);
-router.post("/", authenticate, saveResume);
-router.get("/public/:slug", getPublicResume);
-router.get("/export/:id", authenticate, exportResumePDF);
-
+router.post("/create", authenticate, ResumeController.createResume);
+router.get("/my", authenticate, ResumeController.getUserResumes);
+router.put("/:id", authenticate, ResumeController.updateResume);
+router.delete("/:id", authenticate, ResumeController.deleteResume);
 
 export default router;

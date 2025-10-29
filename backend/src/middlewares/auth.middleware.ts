@@ -1,25 +1,32 @@
-import type { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../utils/token";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 export interface AuthRequest extends Request {
-  userId?: string;
+  user?: {
+    userId: string;
+    email: string;
+  };
 }
 
 export const authenticate = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer "))
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  const token = authHeader.split(" ")[1] || "";
+  const token = authHeader.split(" ")[1];
   try {
-    const payload = verifyAccessToken(token) as any;
-    req.userId = payload.userId;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: string;
+      email: string;
+    };
+    (req as AuthRequest).user = decoded;
     next();
-  } catch (err) {
+  } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
   }
 };

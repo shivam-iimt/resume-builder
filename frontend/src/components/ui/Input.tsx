@@ -1,27 +1,32 @@
 import React from 'react';
+import { Input as AntInput } from 'antd';
 import clsx from 'clsx';
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label?: string;
-  error?: string | boolean;
+interface InputProps {
+  placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-};
+  type?: string;
+}
 
-export default function Input({ label, error, className, ...rest }: InputProps) {
+export default function Input({
+  placeholder,
+  value,
+  onChange,
+  className,
+  type = 'text',
+}: InputProps) {
   return (
-    <label className="block text-sm">
-      {label && (
-        <div className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-300">{label}</div>
+    <AntInput
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className={clsx(
+        'rounded-xl border-gray-200 focus:border-primary focus:shadow-soft transition-all',
+        className,
       )}
-      <input
-        {...rest}
-        className={clsx(
-          'w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] focus-ring',
-          'placeholder:opacity-60',
-          className,
-        )}
-      />
-      {error && <div className="mt-1 text-xs text-red-500">{error}</div>}
-    </label>
+    />
   );
 }
